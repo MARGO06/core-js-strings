@@ -103,13 +103,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   removeLeadingWhitespaces('\t\t\tHello, World! ') => 'Hello, World! '
  */
 function removeLeadingWhitespaces(value) {
-  let result;
-  if (value.charAt(0) === ' ' || value.charAt(value.length - 1) === ' ') {
-    result = value.trimStart();
-  } else {
-    result = value.trimEnd();
-  }
-  return result;
+  return value.trimStart();
 }
 
 /**
@@ -124,15 +118,7 @@ function removeLeadingWhitespaces(value) {
  *   removeTrailingWhitespaces('\t\t\tHello, World! ') => '\t\t\tHello, World!'
  */
 function removeTrailingWhitespaces(value) {
-  let result;
-  if (value.charAt(0) === ' ' || value.charAt(value.length - 1) === ' ') {
-    result = value.trimEnd();
-  } else if (value.trim() === '') {
-    result = '';
-  } else {
-    result = value;
-  }
-  return result;
+  return value.trimEnd();
 }
 
 /**
@@ -225,10 +211,7 @@ function sumOfCodes(str) {
  *   startsWith('Hello World', 'Hello') => true
  */
 function startsWith(str, substr) {
-  if (str.startsWith(substr)) {
-    return true;
-  }
-  return false;
+  return str.startsWith(substr) ? 1 : 0;
 }
 
 /**
@@ -243,10 +226,7 @@ function startsWith(str, substr) {
  *   endsWith('Hello World', 'Hello') => false
  */
 function endsWith(str, substr) {
-  if (str.endsWith(substr)) {
-    return true;
-  }
-  return false;
+  return str.endsWith(substr) ? 1 : 0;
 }
 
 /**
@@ -266,10 +246,10 @@ function formatTime(minutes, seconds) {
   let min = String(minutes);
   let sec = String(seconds);
   if (min.length === 1) {
-    min = ''.concat(0, min);
+    min = min.padStart(2, '0');
   }
   if (sec.length === 1) {
-    sec = ''.concat(0, sec);
+    sec = sec.padStart(2, '0');
   }
   return `${min}:${sec}`;
 }
@@ -316,10 +296,7 @@ function orderAlphabetically(str) {
  *   containsSubstring('12345', '34') => true
  */
 function containsSubstring(str, substring) {
-  if (str.includes(substring)) {
-    return true;
-  }
-  return false;
+  return str.includes(substring) ? 1 : 0;
 }
 
 /**
@@ -361,7 +338,7 @@ function countVowels(str) {
  *   isPalindrome('No lemon, no melon') => true
  */
 function isPalindrome(str) {
-  const str1 = str.toUpperCase().replace(/\s|,/g, '');
+  const str1 = str.toUpperCase().replace(/[\s,!?]/g, '');
   const newString = str1.split('').reverse().join('');
   if (str1 === newString) {
     return true;
@@ -387,12 +364,9 @@ function findLongestWord(sentence) {
   for (let i = 0; i < newSentence.length; i += 1) {
     lengthResult.push(newSentence[i].length);
   }
-  let maxLength;
-  for (let j = 0; j < lengthResult.length; j += 1) {
-    maxLength = Math.max.apply(null, lengthResult);
-  }
-  const indexMax = lengthResult.indexOf(maxLength);
-  return newSentence[indexMax];
+  const maxLength = Math.max.apply(null, lengthResult);
+  const indexResult = lengthResult.indexOf(maxLength);
+  return newSentence[indexResult];
 }
 
 /**
@@ -521,20 +495,18 @@ function extractEmails(str) {
  *
  */
 function encodeToRot13(str) {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const number = alphabet.length / 2;
-  const newString = str.toUpperCase();
-  let result;
-  for (let i = 0; i < alphabet.length; i += 1) {
-    for (let j = 0; j < newString.length; j += 1) {
-      if (newString[j] === alphabet[i] && [i] < number) {
-        result += alphabet[i + 13];
-      } else if (newString[j] === alphabet[i] && [i] > number) {
-        result += alphabet[i - 13];
-      }
+  const wordArray = str.split('');
+  const result = wordArray.map((item) => {
+    const code = item.charCodeAt(0);
+    if (code >= 65 && code <= 90) {
+      return String.fromCharCode(((code - 65 + 13) % 26) + 65);
     }
-  }
-  return result;
+    if (code >= 97 && code <= 122) {
+      return String.fromCharCode(((code - 97 + 13) % 26) + 97);
+    }
+    return item;
+  });
+  return result.join('');
 }
 
 /**
